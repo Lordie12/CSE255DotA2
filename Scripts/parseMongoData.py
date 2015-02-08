@@ -8,7 +8,6 @@ Created on Tue Feb 3 18:37:36 2015
 
 import numpy as np
 import networkx as nx
-import community as c
 import prettyplotlib as ppl
 
 from json import load
@@ -53,20 +52,21 @@ class drawStats(object):
         self.VG = nx.Graph()
         # Defeat Co-occurrence graph
         self.DG = nx.Graph()
+        # The threshold number of training points to use
+        # for our data
+        self.thresh = int(0.85 * self.coll.find().count())
         # Load the data into memory for further analysis
         self.load_data()
         # Create the pairwise hero statistics
         self.hero_stats_pair()
-        # Build the co-occurrence graphs for victories and defeats
-        self.build_cooccur_graph()
 
-    def load_data(self, thresh=15000):
+    def load_data(self):
         '''
         Load data from the mongoDB DB DotA2 into
         an OrderedDict used by the class
         '''
-        print 'Loading MongoDB Data...'
-        for i, rec in enumerate(self.coll.find().limit(thresh)):
+        print 'Loading JSON Data from MongoDB...'
+        for i, rec in enumerate(self.coll.find().limit(self.thresh)):
             self.matchDict[i] = rec
         print 'Done'
 
@@ -169,6 +169,13 @@ class drawStats(object):
                                   key=itemgetter(1), reverse=True))
 
     def draw_color_mesh(self):
+        '''
+        Draws a heatmap of pairs of heroes which co-occur
+        in the winning and in the losing teams, useful to
+        visualize the relationship between strong pairs of
+        heroes which lead to victories vs. weak pairs of
+        heroes which don't have much synergy
+        '''
         red_yellow = brewer2mpl.get_map('YlGnBu', 'Sequential', 9).mpl_colormap
 
         fig, ax = plt.subplots(1, figsize=(13, 10))
@@ -196,6 +203,11 @@ class drawStats(object):
         plt.clf()
 
     def build_cooccur_graph(self):
+        '''
+        Builds the hero co-occurrence graph and writes it into
+        a graphml format readable by Gephi, which is used
+        for visualization and community detection
+        '''
         for k in self.dwstat:
             if self.dwstat[k] != 0:
                 self.VG.add_edges_from([k], weight=self.dwstat[k])
@@ -206,14 +218,6 @@ class drawStats(object):
 
         nx.write_graphml(self.VG, '../Data/VicGraph.graphml')
         nx.write_graphml(self.DG, '../Data/LossGraph.graphml')
-
-    def draw_cooccur_graph(self):
-        pass
-        # layout = nx.random_layout(self.VG)
-        # nx.draw(self.VG, layout, font_size=15, edge_color='c', alpha=0.2)
-        # plt.savefig('Sample.png', bbox_inches='tight')
-        # plt.show()
-        # plt.clf()
 
 
 def main():

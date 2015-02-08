@@ -6,7 +6,6 @@ Created on Fri Jan 30 14:57:46 2015
 @author: Lanfear
 """
 
-#!/usr/bin/python
 from os import getenv, statvfs
 import smtplib
 from time import strftime, localtime
