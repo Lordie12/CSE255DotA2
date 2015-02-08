@@ -6,7 +6,7 @@ Created on Fri Jan 30 14:57:46 2015
 @author: Lanfear
 """
 
-from os import getenv, statvfs
+from os import getenv
 import smtplib
 from time import strftime, localtime
 from email.mime.text import MIMEText
@@ -58,18 +58,12 @@ def main():
     human_readable_time = strftime("%a, %d %b %Y %H:%M:%S GMT",
                                    localtime(most_recent_match_time))
 
-    d_stats = statvfs('/')
-    mb_remaining = d_stats.f_bavail * d_stats.f_frsize/1024.0/1024.0/1024.0
-
     msg = '''
     Hello love,
     The database currently contains %s matches.
-    The most recent match_id added to the database was %s.
-    The date of that match was %s.
-    There are %.2f remaining GB on the hard drive.
-    <3 DotABot
+    The most recent match id added to the database was %s on %s.
     ''' % (total_matches, most_recent_match_id,
-           human_readable_time, mb_remaining)
+           human_readable_time)
 
     send_email(msg, subject='DotA2 Status Update')
 
