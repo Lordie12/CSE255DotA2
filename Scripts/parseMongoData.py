@@ -17,6 +17,7 @@ from operator import itemgetter
 from itertools import combinations
 from collections import OrderedDict
 from prettyplotlib import brewer2mpl
+from progressbar import ProgressBar, Bar, Percentage, FormatLabel, ETA
 
 
 class drawStats(object):
@@ -54,7 +55,7 @@ class drawStats(object):
         self.DG = nx.Graph()
         # The threshold number of training points to use
         # for our data
-        self.thresh = int(0.85 * self.coll.find().count())
+        self.thresh = int(0.90 * self.coll.find().count())
         # Load the data into memory for further analysis
         self.load_data()
         # Create the pairwise hero statistics
@@ -65,9 +66,14 @@ class drawStats(object):
         Load data from the mongoDB DB DotA2 into
         an OrderedDict used by the class
         '''
+        widgets = [FormatLabel('Processed: %(value)d/%(max)d matches. '),
+                   ETA(), ' ', Percentage(), ' ', Bar()]
+        pbar = ProgressBar(widgets=widgets, maxval=self.thresh).start()
         print 'Loading JSON Data from MongoDB...'
         for i, rec in enumerate(self.coll.find().limit(self.thresh)):
+            pbar.update(i)
             self.matchDict[i] = rec
+        pbar.finish()
         print 'Done'
 
     def hero_stats(self):

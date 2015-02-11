@@ -98,10 +98,6 @@
 				"id": 25
 			},
 			{
-				"name": "npc_dota_hero_lich",
-				"id": 31
-			},
-			{
 				"name": "npc_dota_hero_lion",
 				"id": 26
 			},
@@ -120,6 +116,10 @@
 			{
 				"name": "npc_dota_hero_witch_doctor",
 				"id": 30
+			},
+			{
+				"name": "npc_dota_hero_lich",
+				"id": 31
 			},
 			{
 				"name": "npc_dota_hero_riki",
@@ -414,6 +414,10 @@
 				"id": 104
 			},
 			{
+				"name": "npc_dota_hero_techies",
+				"id": 105
+			},
+			{
 				"name": "npc_dota_hero_ember_spirit",
 				"id": 106
 			},
@@ -432,10 +436,6 @@
 			{
 				"name": "npc_dota_hero_oracle",
 				"id": 111
-			},
-			{
-				"name": "npc_dota_hero_techies",
-				"id": 105
 			}
 		]
 		,

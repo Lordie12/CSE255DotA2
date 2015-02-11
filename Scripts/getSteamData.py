@@ -6,7 +6,6 @@ Created on Sun Jan 26 23:29:16 2015
 @author: Lanfear
 """
 
-#!/usr/bin/python
 from requests import get
 from pymongo import MongoClient
 from time import strftime
@@ -185,6 +184,7 @@ class DotA2Matches(object):
                 # We have gotten a valid match, insert into the database
                 if parsedInfo is not None:
                     try:
+                        # Remove extraneous fields we will not use
                         parsedInfo.pop('leaver_status', None)
                         parsedInfo.pop('lobby_type', None)
                         parsedInfo.pop('human_players', None)
