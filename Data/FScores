@@ -1,0 +1,14 @@
+Augmented Model F-Score: 
+Precision:  0.684618523052
+Recall:  0.909978308026
+F1 Score:  0.781373690338
+
+Original Model F-Score:
+Precision:  0.752331606218
+Recall:  0.787418655098
+F1 Score:  0.769475357711
+
+Just Genetic:
+Precision:  0.741952506596
+Recall:  0.762472885033
+F1 Score:  0.752072746724

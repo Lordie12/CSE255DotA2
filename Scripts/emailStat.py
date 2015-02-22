@@ -4,6 +4,8 @@
 Created on Fri Jan 30 14:57:46 2015
 
 @author: Lanfear
+Credits to: https://github.com/kevincon/dotaml
+Most of this code borrowed for comparison.
 """
 
 from os import getenv

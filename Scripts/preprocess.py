@@ -4,6 +4,8 @@
 Created on Tue Feb 10 18:36:36 2015
 
 @author: Lanfear
+Credits to: https://github.com/kevincon/dotaml
+Most of this code borrowed for comparison.
 """
 
 import numpy as np
@@ -21,6 +23,8 @@ class LogitPreprocess(object):
         dictionaries to be used in visualizing the underying data.
         Part of the data preprocessing class
         '''
+        # the traintest Ratio
+        self.TrainTestRatio = 10
         self._client = MongoClient('localhost', 27017)
         self._db = self._client.dota2
         # The database collection object
@@ -42,9 +46,11 @@ class LogitPreprocess(object):
         We have only 109 heroes but heroID from 1 to 111,
         transform that into a heroID in the range 1-109
         '''
-        if heroID > 23 and heroID <= 107:
+        # Transform 1-111 into 0-110
+        heroID -= 1
+        if heroID > 22 and heroID <= 106:
             return heroID - 1
-        elif heroID > 107:
+        elif heroID > 106:
             return heroID - 2
         return heroID
 
@@ -63,6 +69,7 @@ class LogitPreprocess(object):
             pbar.update(i)
             self.matchDict[i] = rec
             self.Y[i] = 1 if rec['radiant_win'] else 0
+            # Build the input vector self.X
             for player in rec['players']:
                 # Transform hero_IDs from 1-111 to 1-109
                 hero_id = self.transform(player['hero_id'])
@@ -79,8 +86,8 @@ class LogitPreprocess(object):
         print 'Generating train and test sets...'
         indices = np.random.permutation(self.m_count)
         # Generate random indices to split into train and test sets
-        test_indices = indices[:self.m_count / 10]
-        train_indices = indices[self.m_count / 10:]
+        test_indices = indices[:self.m_count / self.TrainTestRatio]
+        train_indices = indices[self.m_count / self.TrainTestRatio:]
         # Generate train and test sets
         self.X_train = self.X[train_indices]
         self.Y_train = self.Y[train_indices]

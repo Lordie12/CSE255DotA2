@@ -157,6 +157,12 @@ class DotA2(object):
         if not all(status == 0 for status in leaver_status):
             return None
 
+        # Discard matches with Winter Wyvern: New Update
+        hero_id = [row['hero_id'] for row in raw_data['players']]
+        # A game has winter wyvern, quit
+        if any(int(hero) == 112 for hero in hero_id):
+            return None
+
         # All necessary fields have been validated
         return raw_data
 
@@ -196,9 +202,13 @@ class DotA2Matches(object):
                     except KeyError:
                         pass
 
-                    print '%s Inserting match id, ' % strftime("%c"),\
-                        parsedInfo['match_id']
-                    self._d2db.insert(parsedInfo)
+                    try:
+                        self._d2db.insert(parsedInfo)
+                        print '%s Inserting match id, ' % strftime("%c"),\
+                            parsedInfo['match_id']
+                    except:
+                        print 'Match %d already exists' %\
+                                parsedInfo['match_id']
 
 
 def main():
